@@ -162,6 +162,31 @@ User.create(username: "amy_wine", email: "amy_wine@gmail.com", first_name: "Amy"
  created_at: Mon, 04 Mar 2024 00:32:13.561001000 UTC +00:00,
  updated_at: Mon, 04 Mar 2024 00:32:13.561001000 UTC +00:00> 
 
+# making a custom validator
+
+validate :validate_username
+
+near end add private method (doesn't have to be private, but don't want to validate outside of the class)
+
+using REGEXP example
+
+private
+def validate_username
+unless username =~ /\A[a-zA-Z0-9_]+\Z/
+            errors.add(:username, "can only contain letters, numbers, and underscores, and must contain at least one letter or number")
+        end
+        end
+
+# you can try to add a user with a username that has dash or symbols. it will not create a user, because not meet valid criteria
+
+run user.errors.full_messages and it will tell you why cannot create and save 
+
+you could then update the username and it will save it all to database
+
+you can create a user with id: 3
+
+
+
 
 
 
