@@ -166,7 +166,7 @@ User.create(username: "amy_wine", email: "amy_wine@gmail.com", first_name: "Amy"
 
 validate :validate_username
 
-near end add private method (doesn't have to be private, but don't want to validate outside of the class)
+near end add private method (don't want to validate outside of the class)
 
 using REGEXP example
 
@@ -184,6 +184,92 @@ run user.errors.full_messages and it will tell you why cannot create and save
 you could then update the username and it will save it all to database
 
 you can create a user with id: 3
+
+# generating post model with user as foreign key, and content
+
+exit rails console
+
+rails g model Post user:references 
+content:text
+
+run rails db:migrate
+
+class Post has association belongs_to :user
+
+validations
+
+validates :content, presence: true, length: { maximum: 2000 }
+
+rails c
+
+# want to create a post, must come from a user
+
+user = User.first
+
+enter
+
+# could do
+
+post = Post.create(content: "This is a post.", user_id: 1)
+
+or
+
+post = Post.create(content: "This is a post.", user: user)
+
+# console says:
+
+TRANSACTION (0.2ms)  begin transaction
+  Post Create (1.5ms)  INSERT INTO "posts" ("user_id", "content", "created_at", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"  [["user_id", 1], ["content", "This is a post."], ["created_at", "2024-03-04 01:20:03.075436"], ["updated_at", "2024-03-04 01:20:03.075436"]]
+  TRANSACTION (0.7ms)  commit transaction
+ => 
+#<Post:0x00007f9f554ee660
+... 
+3.2.0 :004 >
+
+run post
+
+enter
+
+now console says:
+
+ => 
+#<Post:0x00007f9f554ee660
+ id: 1,
+ user_id: 1,
+ content: "This is a post.",
+ created_at: Mon, 04 Mar 2024 01:20:03.075436000 UTC +00:00,
+ updated_at: Mon, 04 Mar 2024 01:20:03.075436000 UTC +00:00> 
+3.2.0 :005 > 
+
+run post.user
+
+now console says: (gives info about the user that made that post)
+
+=> 
+#<User:0x00007f9f543ae5d0
+ id: 1,
+ username: "john_doe123",
+ email: "johndoe123@gmail.com",
+ first_name: "John",
+ last_name: "Doe",
+ created_at: Sun, 03 Mar 2024 23:38:33.666756000 UTC +00:00,
+ updated_at: Sun, 03 Mar 2024 23:53:22.909462000 UTC +00:00> 
+3.2.0 :006 >
+
+# association for user
+
+has_many :posts
+
+reload!
+
+User.first
+
+enter
+
+user.posts
+
+enter
+
 
 
 
