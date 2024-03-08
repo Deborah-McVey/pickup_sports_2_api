@@ -421,7 +421,63 @@ has_many :comments, as: :commentable, dependent: :destroy
 
 reload!
 
+user = User.first
 
+  User Load (1.4ms)  SELECT "users".* FROM "users" ORDER BY "users"."id" ASC LIMIT ?  [["LIMIT", 1]]
+ => 
+#<User:0x00007f8f894f5220
+... 
+:...skipping...
+ => 
+#<User:0x00007f8f894f5220
+
+user.comments
+
+ Comment Load (0.4ms)  SELECT "comments".* FROM "comments" WHERE "comments"."user_id" = ? /* loading for pp */ LIMIT ?  [["user_id", 1], ["LIMIT", 11]]
+ => [] 
+
+post = Post.first
+
+post
+
+ => 
+#<Post:0x00007f8f885e1b08
+ id: 1,
+ user_id: 1,
+ content: "This is a post.",
+ created_at: Mon, 04 Mar 2024 01:20:03.075436000 UTC +00:00,
+ updated_at: Mon, 04 Mar 2024 01:20:03.075436000 UTC +00:00> 
+
+user.comments
+
+user.comments.create(commentable: post, content: "This is a comments.")
+
+  TRANSACTION (60.4ms)  begin transaction
+  Comment Create (341.7ms)  INSERT INTO "comments" ("user_id", "commentable_type", "commentable_id", "content", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?) RETURNING "id"  [["user_id", 1], ["commentable_type", "Post"], ["commentable_id", 1], ["content", "This is a comments."], ["created_at", "2024-03-08 22:53:38.144940"], ["updated_at", "2024-03-08 22:53:38.144940"]]
+  TRANSACTION (41.5ms)  commit transaction
+ => 
+#<Comment:0x00007f8f892b7e18
+ id: 1,
+ user_id: 1,
+ commentable_type: "Post",
+ commentable_id: 1,
+ content: "This is a comments.",
+ created_at: Fri, 08 Mar 2024 22:53:38.144940000 UTC +00:00,
+ updated_at: Fri, 08 Mar 2024 22:53:38.144940000 UTC +00:00> 
+
+user.comments
+
+user.posts
+
+# go through similar steps for location
+
+exit rails console
+
+* rails g model Location locationable:references{polymorphic} zip_code:string city:string state:string country:string address:string
+
+* rails db:migrate
+
+* haven't done yet d/t terminal locking up *
 
 
 
