@@ -403,7 +403,28 @@ rails g model Comment user:references commentable:references{polymorphic} conten
 
 rails db:migrate
 
-the migration file will say polymorhic: true which makes two columns (commentable and commentable type)
+the migration file will say polymorhic: true which makes two columns (commentable_id and commentable_type)
+
+# models/user.rb
+
+has_many :comments, dependent: :destroy
+
+dependent destroy means that if the user deletes their account, all their comments are also deleted
+
+do the same for profile and posts associations
+
+# models/post.rb
+
+setting up validations and associations
+
+has_many :comments, as: :commentable, dependent: :destroy
+
+reload!
+
+
+
+
+
 
 
 
