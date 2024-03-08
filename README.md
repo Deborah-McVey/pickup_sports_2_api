@@ -262,13 +262,152 @@ has_many :posts
 
 reload!
 
-User.first
+# access the user
+
+user = User.first
 
 enter
 
 user.posts
 
 enter
+
+[#<Post:0x00007f2f18e53f78
+  id: 1,
+  user_id: 1,
+  content: "This is a post.",
+  created_at:
+   Mon, 04 Mar 2024 01:20:03.075436000 UTC +00:00,
+  updated_at:
+   Mon, 04 Mar 2024 01:20:03.075436000 UTC +00:00>] 
+
+# create another post
+
+post = Post.new(content: "This is another post.")
+
+# new method not immediatedly saved
+
+post.save after running this will return false
+
+do user.posts << post
+
+[#<Post:0x00007f2f13313848
+  id: 1,
+  user_id: 1,
+  content: "This is a post.",
+  created_at: Mon, 04 Mar 2024 01:20:03.075436000 UTC +00:00,
+  updated_at: Mon, 04 Mar 2024 01:20:03.075436000 UTC +00:00>,
+ #<Post:0x00007f2f13313708
+  id: 2,
+  user_id: 1,
+  content: "This is another post.",
+  created_at: Fri, 08 Mar 2024 01:55:56.536137000 UTC +00:00,
+  updated_at: Fri, 08 Mar 2024 01:55:56.536137000 UTC +00:00>] 
+
+concludes video: "One to Many Relationship, has_many association, belongs_to assocation - User and Posts"
+
+# begin video: "One to One relationship, has_one association, belongs_to association - User and profile"
+
+# making profile model
+
+exit rails console
+
+rails g model Profile user:references bio:text 
+
+run rails db:migrate
+
+# models/profile.rb
+
+validates :bio, length: { maximum: 2000 }
+
+rails c
+
+# profile has to have user_id
+
+profile = Profile.create
+
+profile.errors.full_messages
+
+["User must exist"]
+
+profile.user = User.first
+
+profile
+
+#<Profile:0x00007f04220a7648
+ id: nil,
+ user_id: 1,
+ bio: nil,
+ created_at: nil,
+ updated_at: nil> 
+
+profile.save
+
+ TRANSACTION (0.2ms)  begin transaction
+  Profile Create (30.1ms)  INSERT INTO "profiles" ("user_id", "bio", "created_at", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"  [["user_id", 1], ["bio", nil], ["created_at", "2024-03-08 02:19:43.236302"], ["updated_at", "2024-03-08 02:19:43.236302"]]
+  TRANSACTION (14.4ms)  commit transaction
+ => true 
+
+profile
+
+#<Profile:0x00007f04220a7648
+ id: 1,
+ user_id: 1,
+ bio: nil,
+ created_at: Fri, 08 Mar 2024 02:19:43.236302000 UTC +00:00,
+ updated_at: Fri, 08 Mar 2024 02:19:43.236302000 UTC +00:00>
+
+profile.user
+
+#<User:0x00007f041bc0c8c8
+ id: 1,
+ username: "john_doe123",
+ email: "johndoe123@gmail.com",
+ first_name: "John",
+ last_name: "Doe",
+ created_at: Sun, 03 Mar 2024 23:38:33.666756000 UTC +00:00,
+ updated_at: Sun, 03 Mar 2024 23:53:22.909462000 UTC +00:00> 
+
+user = User.first
+
+user
+
+user.profile
+
+# we need to add association to models/user.rb for profile
+
+has_one :profile
+
+reload!
+
+user = User.first
+
+user.profile
+
+#<Profile:0x00007f041bbbea38
+ id: 1,
+ user_id: 1,
+ bio: nil,
+ created_at: Fri, 08 Mar 2024 02:19:43.236302000 UTC +00:00,
+ updated_at: Fri, 08 Mar 2024 02:19:43.236302000 UTC +00:00> 
+
+concludes video: "One to One relationship, has_one association, belongs_to association - User and profile" 
+
+# begin video: "Polymorphic Association - Comments"
+
+# create comment model with polymorphic association
+
+exit rails console
+
+rails g model Comment user:references commentable:references{polymorphic} content:text
+
+rails db:migrate
+
+the migration file will say polymorhic: true which makes two columns (commentable and commentable type)
+
+
+
+
 
 
 
