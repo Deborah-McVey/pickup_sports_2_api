@@ -1179,6 +1179,156 @@ concludes video "Nested Routes - Getting user posts"
 
 # begin video "Post Resource - Create, Update and Destroy"
 
+rails g controller posts
+
+# controllers/posts_controller.rb
+
+copy everything from controllers/users_controller.rb because it is similar, paste in controllers/posts_controller.rb and then change all occurrences
+
+get rid of index, show, and posts_index
+
+class PostsController < ApplicationController
+    before_action :set_user, only: [:update, :destroy]
+                 
+        def create
+          post = Post.new(post_params)
+        if post.save
+          render json: post, status: :created
+        else
+          render json: post.errors, status: :unprocessable_entity
+          end
+        end
+      
+        def update
+          # post = Post.find(params[:id])
+        if @post.update(post_params)
+          render json: @post, status: :ok
+        else
+          render json: @post.errors, status: :unprocessable_entity
+        end 
+      end
+      
+      def destroy
+        # post = Post.find(params[:id])
+        if @post.destroy
+          render json: nil, status: :ok
+        else
+          render json: @post.errors, status: :unprocessable_entity
+        end
+      end
+                 
+      private
+       
+        def set_post
+          @post = Post.find(params[:id])
+        end
+      
+        def post_params
+          params.permit(:content, :user_id)
+        end
+      end
+      
+# config/routes.rb
+
+resources :posts, only: [:create, :update, :destroy]
+
+rails s
+
+# Postman
+
+add request
+
+create post
+
+POST localhost:3000/posts
+
+Body, raw, JSON
+
+{
+  "content": "This is content.",
+  "user_id": 1
+}
+
+click Send button
+
+{
+    "id": 3,
+    "user_id": 1,
+    "content": "This is content.",
+    "created_at": "2024-03-09T20:13:48.562Z",
+    "updated_at": "2024-03-09T20:13:48.562Z"
+}
+
+# user posts
+
+# Postman
+
+GET localhost:3000/users/1/posts
+
+[
+    {
+        "id": 1,
+        "user_id": 1,
+        "content": "This is a post.",
+        "created_at": "2024-03-04T01:20:03.075Z",
+        "updated_at": "2024-03-04T01:20:03.075Z"
+    },
+    {
+        "id": 2,
+        "user_id": 1,
+        "content": "This is another post.",
+        "created_at": "2024-03-08T01:55:56.536Z",
+        "updated_at": "2024-03-08T01:55:56.536Z"
+    },
+    {
+        "id": 3,
+        "user_id": 1,
+        "content": "This is content.",
+        "created_at": "2024-03-09T20:13:48.562Z",
+        "updated_at": "2024-03-09T20:13:48.562Z"
+    }
+]
+
+# browser
+
+[{"id":1,"user_id":1,"content":"This is a post.","created_at":"2024-03-04T01:20:03.075Z","updated_at":"2024-03-04T01:20:03.075Z"},{"id":2,"user_id":1,"content":"This is another post.","created_at":"2024-03-08T01:55:56.536Z","updated_at":"2024-03-08T01:55:56.536Z"},{"id":3,"user_id":1,"content":"This is content.","created_at":"2024-03-09T20:13:48.562Z","updated_at":"2024-03-09T20:13:48.562Z"}]
+
+# update posts
+
+add request
+
+update posts
+
+PUT localhost:3000/posts/1
+
+Body, raw, JSON
+
+{
+  "content": "This has been changed."
+}
+
+** come back to this bc it didn't update **
+
+# destroy/delete posts
+
+# Postman
+
+Add Request
+
+delete posts
+
+DELETE localhost:3000/posts/1
+
+click Send button
+
+should get reponse of null in Postman
+
+this would delete the post with id of 1
+
+concludes video "Post Resource - Create, Update and Destroy"
+
+# begin video "Testing in Rails using RSpec - Setup and User Model"
+
 
 
 
