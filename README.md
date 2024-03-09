@@ -1378,6 +1378,8 @@ FactoryBot.define do
   end
 end
 
+(put in next video actually)
+
 # spec/factories/events.rb
 
 FactoryBot.define do
@@ -1424,6 +1426,36 @@ concludes video "Testing in Rails using RSpec - Setup and User Model"
 
 # begin video "Testing Requests using RSpec - Posts Controller"
 
+# post requests spec
+
+if you didn't set up rspec at beginning of project, you can run rails g rspec:request Posts
+
+# spec/requests/posts_spec.rb
+
+copied and pasted from other version I made the first time I watched these videos
+
+# spec/models/post_spec.rb
+
+deleted pending line
+
+# controllers/post_controller.rb
+
+now putting in index and show blocks
+
+before_action :authenticate_request
+
+     def index
+      posts = Post.all
+      render json: posts, status: :ok
+     end
+  
+     def show
+      render json: @post, status: :ok
+     end
+
+concludes video "Testing Requests using RSpec - Posts Controller"   
+
+# begin video "Tests for Users Controller - Another example of testing Requests"
 
 
 
