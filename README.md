@@ -801,7 +801,57 @@ event.sports
 
 concludes video "Many to Many Relationship, has_and_belongs_to_many Association - Events and Sports"
 
-# begin video ""
+# begin video "Introduction to Controllers, Routes, Resources and Postman - Index Action"
+
+# config/routes.rb
+
+localhost:3000/users
+get '/users', to: 'users#index'
+
+reload!
+
+exit rails console
+
+rails g controller users index
+
+# starting the server!
+
+rails s
+
+in browser: localhost:3000 will show like a default Rails frontend
+
+# controllers/user_controller.rb
+
+users = Users.all
+
+render :json users, status: 200
+
+localhost:3000/users
+
+shows users in browser
+
+# Postman extension in VSCode
+
+made new collection, named "Pickup Sports 2"
+
+added GET request
+
+put in route and hit send
+
+also save
+
+shows users on Postman
+
+concludes video "Introduction to Controllers, Routes, Resources and Postman - Index Action"
+
+
+
+
+
+
+
+
+
 
 
 
