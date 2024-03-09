@@ -830,6 +830,10 @@ localhost:3000/users
 
 shows users in browser
 
+browser
+
+[{"id":1,"username":"john_doe123","email":"johndoe123@gmail.com","first_name":"John","last_name":"Doe","created_at":"2024-03-03T23:38:33.666Z","updated_at":"2024-03-03T23:53:22.909Z"},{"id":2,"username":"amy_wine","email":"amy_wine@gmail.com","first_name":"Amy","last_name":"Wine","created_at":"2024-03-04T00:32:13.561Z","updated_at":"2024-03-04T00:32:13.561Z"},{"id":3,"username":"jim123","email":"jim123@gmail.com","first_name":"Jim","last_name":"Owens","created_at":"2024-03-04T00:58:51.343Z","updated_at":"2024-03-04T00:58:51.343Z"}]
+
 # Postman extension in VSCode
 
 made new collection, named "Pickup Sports 2"
@@ -842,21 +846,55 @@ also save
 
 shows users on Postman
 
+Postman
+
+[
+    {
+        "id": 1,
+        "username": "john_doe123",
+        "email": "johndoe123@gmail.com",
+        "first_name": "John",
+        "last_name": "Doe",
+        "created_at": "2024-03-03T23:38:33.666Z",
+        "updated_at": "2024-03-03T23:53:22.909Z"
+    },
+    {
+        "id": 2,
+        "username": "amy_wine",
+        "email": "amy_wine@gmail.com",
+        "first_name": "Amy",
+        "last_name": "Wine",
+        "created_at": "2024-03-04T00:32:13.561Z",
+        "updated_at": "2024-03-04T00:32:13.561Z"
+    },
+    {
+        "id": 3,
+        "username": "jim123",
+        "email": "jim123@gmail.com",
+        "first_name": "Jim",
+        "last_name": "Owens",
+        "created_at": "2024-03-04T00:58:51.343Z",
+        "updated_at": "2024-03-04T00:58:51.343Z"
+    }
+]
+
 concludes video "Introduction to Controllers, Routes, Resources and Postman - Index Action"
 
+# begin video "Resources - Show Action"
 
+# config/routes.rb
 
+localhost:3000/users/1
 
+get '/users/id', to: 'users#show'
 
+# controllers/users_controller.rb
 
+def show
+  user = User.find(params[:id])
+  render json: user, status: 200
+end
 
+* getting errors on browser and Postman **
 
-
-
-
-
-
-
-
-
-
+concludes video "Resources - Show Action"
