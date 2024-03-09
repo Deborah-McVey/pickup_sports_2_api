@@ -997,7 +997,7 @@ update the username of user with id 1
 
 have server running
 
-click SEND button
+click Send button
 
 # controllers/users_controller.rb
 
@@ -1023,4 +1023,49 @@ add @ before user
 
 render json: @user, status: 200
 
+render json: @user.errors, status: :unprocessable_entity
+
+same for update
+
 concludes video "Resources - Update Action"
+
+# begin video "Resources - Destroy Action"
+
+# config/routes.rb
+
+localhost:3000/users/1
+
+delete '/users/:id', to: 'users#destroy'
+
+# controllers/users_controller.rb
+
+include destroy in before_action :set_user
+
+before_action :set_user, only: [:show, :update, :destroy]
+
+def destroy
+  if @user.destroy
+    render json: nil, status: :ok
+  else
+    render json: @user.errors, status: :unprocessable_entity
+  end
+end
+
+make sure show, update, and destroy have @ before user
+
+# Postman
+
+add new request
+
+delete user
+
+DELETE localhost:3000/users/4
+
+click Send button
+
+got reposponse of null and user with id of 4 was deleted
+
+concludes video "Resources - Destroy Action"
+
+
+
