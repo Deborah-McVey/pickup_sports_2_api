@@ -886,7 +886,7 @@ concludes video "Introduction to Controllers, Routes, Resources and Postman - In
 
 localhost:3000/users/1
 
-get '/users/id', to: 'users#show'
+get '/users/:id', to: 'users#show'
 
 # controllers/users_controller.rb
 
@@ -895,6 +895,20 @@ def show
   render json: user, status: 200
 end
 
-* getting errors on browser and Postman **
+browser 
+
+{"id":1,"username":"john_doe123","email":"johndoe123@gmail.com","first_name":"John","last_name":"Doe","created_at":"2024-03-03T23:38:33.666Z","updated_at":"2024-03-03T23:53:22.909Z"}
+
+Postman
+
+{
+    "id": 1,
+    "username": "john_doe123",
+    "email": "johndoe123@gmail.com",
+    "first_name": "John",
+    "last_name": "Doe",
+    "created_at": "2024-03-03T23:38:33.666Z",
+    "updated_at": "2024-03-03T23:53:22.909Z"
+}
 
 concludes video "Resources - Show Action"
