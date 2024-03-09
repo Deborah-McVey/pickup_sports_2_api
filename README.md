@@ -1329,6 +1329,100 @@ concludes video "Post Resource - Create, Update and Destroy"
 
 # begin video "Testing in Rails using RSpec - Setup and User Model"
 
+installing rspec (I did this already at beginning of api project.)
+
+Gemfile
+
+gem 'rspec-rails'
+gem 'factory_bot_rails'
+gem 'faker'
+
+bundle i
+
+rails g rspec:install
+
+I did this already at beginning of api project.  
+
+# removing default test file because we're using rspec tests with factory bot
+
+If you didn't include -T tag when creating the api file, you can run ng -rf test, or manually delete test files
+
+# spec/rails_helper.rb
+
+require 'faker'
+
+in config block
+
+config.include FactoryBot::Syntax::Methods
+
+# spec/models/user_spec.rb
+
+I copied and pasted from file from first time going through these videos.
+
+# spec/factories/users.rb
+
+put in Faker for username, email, first_name, and last_name
+
+put a specifier and separators to make sure you only get usernames at a certain amount of characters and only _ if that's what you want.
+
+you can test out Faker types in the rails console to see if you get the types of results you want
+
+bundle exec rspec
+
+# spec/factories/posts.rb
+
+FactoryBot.define do
+  factory :post do
+    content { Faker::Lorem.paragraph }
+    user
+  end
+end
+
+# spec/factories/events.rb
+
+FactoryBot.define do
+  factory :event do
+    user 
+    content { Faker::Lorem.paragraph }
+    start_date_time { Faker::Time.between(from: DateTime.now + 1, to: DateTime.now + 2) }
+    end_date_time { Faker::Time.between(from: DateTime.now + 3, to: DateTime.now + 4) }
+    guests { Faker::Number.between(from: 1, to: 10) }
+  end
+end
+
+# spec/models/user_spec.rb
+
+ deletes user profile
+ 
+  it 'deletes profile' do
+    profile = Profile.find_by(user_id: user_id)
+    expect(profile).to be_nil
+  end
+
+   deletes user location
+
+  it 'deletes location' do
+    location = Location.find_by(locationable_id: user_id)
+    expect(location).to be_nil
+  end
+
+  deletes user posts
+
+  it 'deletes posts' do
+    posts = Post.where(user_id: user_id)
+    expect(posts).to be_empty
+  end
+
+  deletes user comments
+
+  it 'deletes comments' do
+    comments = Comment.where(user_id: user_id)
+    expect(comments).to be_empty
+  end
+
+concludes video "Testing in Rails using RSpec - Setup and User Model"
+
+# begin video "Testing Requests using RSpec - Posts Controller"
 
 
 
