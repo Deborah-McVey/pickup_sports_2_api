@@ -1067,5 +1067,121 @@ got reposponse of null and user with id of 4 was deleted
 
 concludes video "Resources - Destroy Action"
 
+# begin video "Nested Routes - Getting user posts"
+
+# browser
+
+if you type random characters after localhost:3000 in browser, you get error, but it shows you your paths
+
+Rails has already defined what we have put in config/routes.rb
+
+# config/routes.rb
+
+comment them out (or delete), and replace with resources :users
+
+# browser
+
+it will also add PATCH (which sends data to modify only the fields that need to be updated) to your list
+
+users_path	
+
+GET	/users(.:format)	
+users#index config/routes.rb:17
+
+POST	/users(.:format)	
+users#create config/routes.rb:17
+
+user_path	
+
+GET	/users/:id(.:format)	
+users#show config/routes.rb:17
+
+PATCH	/users/:id(.:format)	
+users#update config/routes.rb:17
+
+PUT	/users/:id(.:format)	
+users#update config/routes.rb:17
+
+DELETE	/users/:id(.:format)	
+users#destroy config/routes.rb:17
+
+# defining customized routes for posts
+
+# config/routes.rb
+
+get '/users/:id/posts', to: 'users#posts_index'
+
+# controllers/users_controller.rb
+
+def posts_index
+  user = User.find(params[:user_id])
+  user_posts = user.posts
+  render json: user_posts, status: :ok
+end
+
+# Postman
+
+add folder posts
+
+add request
+
+get user posts
+
+GET localhost:3000/users/1/posts
+
+click Send button
+
+[
+    {
+        "id": 1,
+        "user_id": 1,
+        "content": "This is a post.",
+        "created_at": "2024-03-04T01:20:03.075Z",
+        "updated_at": "2024-03-04T01:20:03.075Z"
+    },
+    {
+        "id": 2,
+        "user_id": 1,
+        "content": "This is another post.",
+        "created_at": "2024-03-08T01:55:56.536Z",
+        "updated_at": "2024-03-08T01:55:56.536Z"
+    }
+]
+
+# browser localhost:3000/users/1/posts
+
+[{"id":1,"user_id":1,"content":"This is a post.","created_at":"2024-03-04T01:20:03.075Z","updated_at":"2024-03-04T01:20:03.075Z"},{"id":2,"user_id":1,"content":"This is another post.","created_at":"2024-03-08T01:55:56.536Z","updated_at":"2024-03-08T01:55:56.536Z"}]
+
+# config/routes.rb
+
+can extend into a do block, so can remove the users/:id part
+
+resources :users do
+  get 'posts', to: 'users#posts_index'
+end
+
+# browser
+
+type random characters after localhost:3000 to get error and show paths
+
+user_posts_path	
+
+GET	/users/:user_id/posts(.:format)	
+users#posts_index config/routes.rb:23
+
+getting set up for next video posts routes
+
+# config/routes.rb
+
+add resources :posts
+
+concludes video "Nested Routes - Getting user posts"
+
+# begin video "Post Resource - Create, Update and Destroy"
+
+
+
+
+
 
 
