@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_08_235725) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_09_011812) do
   create_table "comments", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "commentable_type", null: false
@@ -43,6 +43,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_08_235725) do
     t.index ["user_id"], name: "index_events_on_user_id"
   end
 
+  create_table "events_sports", id: false, force: :cascade do |t|
+    t.integer "event_id", null: false
+    t.integer "sport_id", null: false
+  end
+
   create_table "locations", force: :cascade do |t|
     t.string "locationable_type", null: false
     t.integer "locationable_id", null: false
@@ -70,6 +75,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_08_235725) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_profiles_on_user_id"
+  end
+
+  create_table "sports", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|

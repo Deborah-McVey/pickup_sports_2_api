@@ -768,6 +768,40 @@ conclude video "Many to Many relationship, has_many through association - Events
 
 # begin video "Many to Many Relationship, has_and_belongs_to_many Association - Events and Sports"
 
+exit rails console
+
+rails g model Sport name:string
+
+rails g migration CreateJoinTableEventSport event sport
+
+rails db:migrate
+
+# models/sport.rb
+
+validates :name, presence: true
+has_and_belongs_to_many :events
+
+# models/event.rb
+
+has_and_belongs_to_many :sports
+
+rails c
+
+event = Event.first
+
+event.sports
+
+returns empty array, which is good
+
+sport = Sport.create(name: "Basketball")
+
+event.sports << sport
+
+event.sports
+
+concludes video "Many to Many Relationship, has_and_belongs_to_many Association - Events and Sports"
+
+# begin video ""
 
 
 
