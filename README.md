@@ -473,11 +473,300 @@ user.posts
 
 exit rails console
 
-* rails g model Location locationable:references{polymorphic} zip_code:string city:string state:string country:string address:string
+rails g model Location locationable:references{polymorphic} zip_code:string city:string state:string country:string address:string
 
-* rails db:migrate
+rails db:migrate
 
-* haven't done yet d/t terminal locking up *
+# models/user.rd
+
+has_one :location, as: :locationable, dependent: :destroy
+
+rails c
+
+user = User.first
+
+Location.create(locationable: user)
+
+TRANSACTION (0.6ms)  begin transaction
+  Location Create (8.9ms)  INSERT INTO "locations" ("locationable_type", "locationable_id", "zip_code", "city", "state", "country", "address", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"  [["locationable_type", "User"], ["locationable_id", 1], ["zip_code", nil], ["city", nil], ["state", nil], ["country", nil], ["address", nil], ["created_at", "2024-03-08 23:21:20.029447"], ["updated_at", "2024-03-08 23:21:20.029447"]]
+  TRANSACTION (4.4ms)  commit transaction
+ => 
+#<Location:0x00007f6b890fa4f0
+ id: 1,
+:...skipping...
+ => 
+#<Location:0x00007f6b890fa4f0
+ id: 1,
+ locationable_type: "User",
+ locationable_id: 1,
+ zip_code: nil,
+ city: nil,
+ state: nil,
+ country: nil,
+ address: nil,
+ created_at: Fri, 08 Mar 2024 23:21:20.029447000 UTC +00:00,
+ updated_at: Fri, 08 Mar 2024 23:21:20.029447000 UTC +00:00> 
+
+user.location
+
+Location Load (9.9ms)  SELECT "locations".* FROM "locations" WHERE "locations"."locationable_id" = ? AND "locations"."locationable_type" = ? LIMIT ?  [["locationable_id", 1], ["locationable_type", "User"], ["LIMIT", 1]]
+ => 
+#<Location:0x00007f6b886702a0
+:...skipping...
+ => 
+#<Location:0x00007f6b886702a0
+ id: 1,
+ locationable_type: "User",
+ locationable_id: 1,
+ zip_code: nil,
+ city: nil,
+ state: nil,
+ country: nil,
+ address: nil,
+ created_at: Fri, 08 Mar 2024 23:21:20.029447000 UTC +00:00,
+ updated_at: Fri, 08 Mar 2024 23:21:20.029447000 UTC +00:00> 
+
+concludes video "Polymorphic Association - Comments"
+
+# begin video "Many to Many relationship, has_many through association - Events and Users"
+
+exit rails console
+
+rails g model Event user:references content:text start_date_time:datetime end_date_time:datetime guests:integer
+
+rails db:migrate
+
+# models/event.rb
+
+validates :start_date_time, :end_date_time, :guests, presence: true
+has_one :location, as: :locationable, dependent: :destroy
+has_many :comments, as: :commentable, dependent: :destroy
+
+# models/user.rb
+
+has_many :events
+
+rails c
+
+user = User.first
+
+user.events
+
+ Event Load (4.2ms)  SELECT "events".* FROM "events" WHERE "events"."user_id" = ? /* loading for pp */ LIMIT ?  [["user_id", 1], ["LIMIT", 11]]
+ => [] 
+
+user.events.create(guests: 5, start_date_time: DateTime.now, end_date_time:DateTime.now + 1.day)
+
+TRANSACTION (13.4ms)  begin transaction
+  Event Create (56.1ms)  INSERT INTO "events" ("user_id", "content", "start_date_time", "end_date_time", "guests", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING "id"  [["user_id", 1], ["content", nil], ["start_date_time", "2024-03-08 23:47:08.100379"], ["end_date_time", "2024-03-09 23:47:08.131751"], ["guests", 5], ["created_at", "2024-03-08 23:47:08.366793"], ["updated_at", "2024-03-08 23:47:08.366793"]]
+  TRANSACTION (19.2ms)  commit transaction
+ => 
+#<Event:0x00007f557a1e82b0
+ id: 1,
+ user_id: 1,
+ content: nil,
+ start_date_time: Fri, 08 Mar 2024 23:47:08.100379000 UTC +00:00,
+ end_date_time: Sat, 09 Mar 2024 23:47:08.131751000 UTC +00:00,
+:...skipping...
+ => 
+#<Event:0x00007f557a1e82b0
+ id: 1,
+ user_id: 1,
+ content: nil,
+ start_date_time: Fri, 08 Mar 2024 23:47:08.100379000 UTC +00:00,
+ end_date_time: Sat, 09 Mar 2024 23:47:08.131751000 UTC +00:00,
+ guests: 5,
+ created_at: Fri, 08 Mar 2024 23:47:08.366793000 UTC +00:00,
+ updated_at: Fri, 08 Mar 2024 23:47:08.366793000 UTC +00:00>
+
+user.events
+
+ Event Load (1.8ms)  SELECT "events".* FROM "events" WHERE "events"."user_id" = ? /* loading for pp */ LIMIT ?  [["user_id", 1], ["LIMIT", 11]]
+ => 
+:...skipping...
+ => 
+[#<Event:0x00007f55794585c8
+  id: 1,
+  user_id: 1,
+  content: nil,
+  start_date_time: Fri, 08 Mar 2024 23:47:08.100379000 UTC +00:00,
+  end_date_time: Sat, 09 Mar 2024 23:47:08.131751000 UTC +00:00,
+  guests: 5,
+  created_at: Fri, 08 Mar 2024 23:47:08.366793000 UTC +00:00,
+  updated_at: Fri, 08 Mar 2024 23:47:08.366793000 UTC +00:00>] 
+
+event = Event.first
+
+event.comments
+
+event.location
+
+exit rails console
+
+rails g model EventParticipant user:references event:references rating:integer
+
+rails db:migrate
+
+# models/event.rb
+
+has_many :users, through: :event_participants
+has_many :event_participants
+
+# models/user.rb
+
+has_many :events, through: :event_participants
+has_many :event_participants
+
+rails c
+
+user = User.first
+
+event = Event.create(start_date_time: DateTime.now, end_date_time:DateTime.now + 1.day, user: user, guests: 5)
+
+TRANSACTION (0.2ms)  begin transaction
+  Event Create (18.2ms)  INSERT INTO "events" ("user_id", "content", "start_date_time", "end_date_time", "guests", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING "id"  [["user_id", 1], ["content", nil], ["start_date_time", "2024-03-09 00:08:58.428148"], ["end_date_time", "2024-03-10 00:08:58.430957"], ["guests", 5], ["created_at", "2024-03-09 00:08:58.483221"], ["updated_at", "2024-03-09 00:08:58.483221"]]
+
+user.events
+
+gets error because...
+
+difference between "events the user is partipating in" and "events that the user created"
+
+# models/user.rb
+
+events that the user has created
+has_many :created_events, class_name: 'Event', foreign_key: 'user_id'
+
+reload!
+
+user = User.first
+
+user.events
+
+  Event Load (3.9ms)  SELECT "events".* FROM "events" INNER JOIN "event_participants" ON "events"."id" = "event_participants"."event_id" WHERE "event_participants"."user_id" = ? /* loading for pp */ LIMIT ?  [["user_id", 1], ["LIMIT", 11]]
+ => []
+
+user.created_events
+
+Event Load (18.0ms)  SELECT "events".* FROM "events" WHERE "events"."user_id" = ? /* loading for pp */ LIMIT ?  [["user_id", 1], ["LIMIT", 11]]
+ => 
+[#<Event:0x00007fae5cd6c790
+  id: 1,
+  user_id: 1,
+:...skipping...
+ => 
+[#<Event:0x00007fae5cd6c790
+  id: 1,
+  user_id: 1,
+  content: nil,
+  start_date_time: Fri, 08 Mar 2024 23:47:08.100379000 UTC +00:00,
+  end_date_time: Sat, 09 Mar 2024 23:47:08.131751000 UTC +00:00,
+  guests: 5,
+  created_at: Fri, 08 Mar 2024 23:47:08.366793000 UTC +00:00,
+  updated_at: Fri, 08 Mar 2024 23:47:08.366793000 UTC +00:00>,
+ #<Event:0x00007fae5c1094d0
+  id: 2,
+  user_id: 1,
+  content: nil,
+  start_date_time: Sat, 09 Mar 2024 00:08:58.428148000 UTC +00:00,
+  end_date_time: Sun, 10 Mar 2024 00:08:58.430957000 UTC +00:00,
+  guests: 5,
+  created_at: Sat, 09 Mar 2024 00:08:58.483221000 UTC +00:00,
+  updated_at: Sat, 09 Mar 2024 00:08:58.483221000 UTC +00:00>] 
+3.2.0 :018 > reload!
+Reloading...
+ => true 
+3.2.0 :019 > user = User.first
+  User Load (0.6ms)  SELECT "users".* FROM "users" ORDER BY "users"."id" ASC LIMIT ?  [["LIMIT", 1]]
+ => 
+#<User:0x00007fae5db76980
+... 
+3.2.0 :020 > user.created_events
+  Event Load (0.6ms)  SELECT "events".* FROM "events" WHERE "events"."user_id" = ? /* loading for pp */ LIMIT ?  [["user_id", 1], ["LIMIT", 11]]
+ => 
+[#<Event:0x00007fae5cdeddb8
+  id: 1,
+  user_id: 1,
+  content: nil,
+  start_date_time: Fri, 08 Mar 2024 23:47:08.100379000 UTC +00:00,
+  end_date_time: Sat, 09 Mar 2024 23:47:08.131751000 UTC +00:00,
+  guests: 5,
+  created_at: Fri, 08 Mar 2024 23:47:08.366793000 UTC +00:00,
+  updated_at: Fri, 08 Mar 2024 23:47:08.366793000 UTC +00:00>,
+ #<Event:0x00007fae5c109d90
+  id: 2,
+  user_id: 1,
+  content: nil,
+  start_date_time: Sat, 09 Mar 2024 00:08:58.428148000 UTC +00:00,
+  end_date_time: Sun, 10 Mar 2024 00:08:58.430957000 UTC +00:00,
+  guests: 5,
+  created_at: Sat, 09 Mar 2024 00:08:58.483221000 UTC +00:00,
+  updated_at: Sat, 09 Mar 2024 00:08:58.483221000 UTC +00:00>] 
+
+# allow user to join his/her own event
+
+EventParticipant.create(user: user, event: Event.first)
+
+Event Load (40.0ms)  SELECT "events".* FROM "events" ORDER BY "events"."id" ASC LIMIT ?  [["LIMIT", 1]]
+  TRANSACTION (3.0ms)  begin transaction
+  EventParticipant Create (61.5ms)  INSERT INTO "event_participants" ("user_id", "event_id", "rating", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"  [["user_id", 1], ["event_id", 1], ["rating", nil], ["created_at", "2024-03-09 00:43:46.240580"], ["updated_at", "2024-03-09 00:43:46.240580"]]
+  TRANSACTION (12.5ms)  commit transaction
+ => 
+#<EventParticipant:0x00007fae5daf3ad0
+ id: 1,
+ user_id: 1,
+ event_id: 1,
+ rating: nil,
+ created_at: Sat, 09 Mar 2024 00:43:46.240580000 UTC +00:00,
+ updated_at: Sat, 09 Mar 2024 00:43:46.240580000 UTC +00:00> 
+:...skipping...
+ => 
+#<EventParticipant:0x00007fae5daf3ad0
+ id: 1,
+ user_id: 1,
+ event_id: 1,
+ rating: nil,
+ created_at: Sat, 09 Mar 2024 00:43:46.240580000 UTC +00:00,
+ updated_at: Sat, 09 Mar 2024 00:43:46.240580000 UTC +00:00>
+
+user.events
+
+Event Load (1.9ms)  SELECT "events".* FROM "events" INNER JOIN "event_participants" ON "events"."id" = "event_participants"."event_id" WHERE "event_participants"."user_id" = ? /* loading for pp */ LIMIT ?  [["user_id", 1], ["LIMIT", 11]]
+ => 
+[#<Event:0x00007fae5c106550
+  id: 1,
+  user_id: 1,
+  content: nil,
+  start_date_time: Fri, 08 Mar 2024 23:47:08.100379000 UTC +00:00,
+:...skipping...
+ => 
+[#<Event:0x00007fae5c106550
+  id: 1,
+  user_id: 1,
+  content: nil,
+  start_date_time: Fri, 08 Mar 2024 23:47:08.100379000 UTC +00:00,
+  end_date_time: Sat, 09 Mar 2024 23:47:08.131751000 UTC +00:00,
+  guests: 5,
+  created_at: Fri, 08 Mar 2024 23:47:08.366793000 UTC +00:00,
+  updated_at: Fri, 08 Mar 2024 23:47:08.366793000 UTC +00:00>]
+
+Event.first.users  
+
+  Event Load (15.4ms)  SELECT "events".* FROM "events" ORDER BY "events"."id" ASC LIMIT ?  [["LIMIT", 1]]
+  User Load (8.0ms)  SELECT "users".* FROM "users" INNER JOIN "event_participants" ON "users"."id" = "event_participants"."user_id" WHERE "event_participants"."event_id" = ? /* loading for pp */ LIMIT ?  [["event_id", 1], ["LIMIT", 11]]
+ => 
+[#<User:0x00007fae5c1062d0
+  id: 1,
+  username: "john_doe123",
+  email: "johndoe123@gmail.com",
+  first_name: "John",
+  last_name: "Doe",
+  created_at: Sun, 03 Mar 2024 23:38:33.666756000 UTC +00:00,
+  updated_at: Sun, 03 Mar 2024 23:53:22.909462000 UTC +00:00>] 
+
+conclude video "Many to Many relationship, has_many through association - Events and Users" 
+
+# begin video "Many to Many Relationship, has_and_belongs_to_many Association - Events and Sports"
 
 
 
@@ -487,27 +776,3 @@ exit rails console
 
 
 
-
-
-
-
-
-
-
-
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
