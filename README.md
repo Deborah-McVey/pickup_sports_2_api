@@ -952,10 +952,75 @@ select Body, raw, JSON
 type into Postman
 
 {
-  "username": "john_doe123",
-    "email": "johndoe123@gmail.com",
-    "first_name": "John",
-    "last_name": "Doe"
+  "username": "harry_stylish123",
+    "email": "harrystylish123@gmail.com",
+    "first_name": "Harry",
+    "last_name": "Stylish"
 }
 
-conclude video "Resources - Create Action"
+con#clude video "Resources - Create Action"
+
+# begin video "Resources - Update Action"
+
+# config/routes.rb
+
+localhost:3000/users/1
+
+put '/users/:id', to: 'users#update'
+
+# controllers/users_controller.rb
+
+def update
+  user = Users.find(params[:id])
+  if user.update(user_params)
+    render json: user, status: :ok
+  else
+    render json: user.errors, status: :unprocessable_entity
+end  
+end
+
+# Postman
+
+add new request
+
+update user
+
+PUT localhost:3000/users/1
+
+Body, raw, JSON
+
+update the username of user with id 1
+
+{
+  "username": "john_doe456"
+}
+
+have server running
+
+click SEND button
+
+# controllers/users_controller.rb
+
+under private
+
+def set_user
+  @user = User.find(params[:id])
+end
+
+want to execute before other actions
+
+at top
+
+before_action :set_user, only: [:show, :update]
+
+# show
+
+remove line 
+
+user = User.find(params[:id])
+
+add @ before user
+
+render json: @user, status: 200
+
+concludes video "Resources - Update Action"
