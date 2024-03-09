@@ -895,11 +895,11 @@ def show
   render json: user, status: 200
 end
 
-browser 
+# browser 
 
 {"id":1,"username":"john_doe123","email":"johndoe123@gmail.com","first_name":"John","last_name":"Doe","created_at":"2024-03-03T23:38:33.666Z","updated_at":"2024-03-03T23:53:22.909Z"}
 
-Postman
+# Postman
 
 {
     "id": 1,
@@ -912,3 +912,50 @@ Postman
 }
 
 concludes video "Resources - Show Action"
+
+# begin video "Resources - Create Action"
+
+# config/routes.rb
+
+localhost:3000/users
+
+post '/users', to: 'users#create'
+
+# controllers/user_controller.rb
+
+def create
+  user = User.new(user_params)
+
+  if user.save
+  render json: user, status: :created
+  else
+  render json: user.errors, status: :unprocessable_entity
+  end
+end
+
+  private
+
+  def user_params
+    params.require(:user).permit(:username, :email, :first_name, :last_name)
+  end
+
+# Postman
+
+new request
+
+name create user
+
+POST localhost:3000/users
+
+select Body, raw, JSON
+
+type into Postman
+
+{
+  "username": "john_doe123",
+    "email": "johndoe123@gmail.com",
+    "first_name": "John",
+    "last_name": "Doe"
+}
+
+conclude video "Resources - Create Action"
