@@ -74,7 +74,7 @@ end
     context "with invalid params" do
       
       before do
-        post_attributes = attributes_for{:post, user_id: nil}
+        post_attributes = attributes_for{:post, content: nil}
         post "/posts", params: post_attributes, 
         headers: { Authorization: "Bearer #{token}" }
       end

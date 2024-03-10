@@ -1888,7 +1888,33 @@ before_action :authenticate_request
 
 concludes video "Authenticating User Requests"
 
-# bein video "Identifying Current User through Requests"
+# begin video "Identifying Current User through Requests"
+
+# controllers/posts_controller.rb
+
+remove user_id from post_params
+
+def create
+post = @current_user.posts.new(post_params)
+
+# spec/requests/posts_spec.rb
+# spec/requests/events_spec.rb
+# controllers/events_controller.rb
+remove user_id if you still have it there
+
+# controllers/events_controller.rb
+    def create
+        event = @current_user.created_events.new(event_params)
+
+concludes video "Identifying Current User through Requests"
+
+# begin video "Serializing Data with Blueprinter"
+
+
+
+
+
+
 
 
 
