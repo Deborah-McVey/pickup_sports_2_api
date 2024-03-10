@@ -5,7 +5,10 @@ Rails.application.routes.draw do
   end
 
   resources :events
-  resources :posts, only: [:create, :update, :destroy]
+  scope :profiles do
+    get ':username', to: 'profiles#show'
+  end
+  resources :posts #, only: [:create, :update, :destroy]
   resources :users do
     get 'posts', to: 'users#posts_index'
     end

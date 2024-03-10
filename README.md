@@ -1910,13 +1910,172 @@ concludes video "Identifying Current User through Requests"
 
 # begin video "Serializing Data with Blueprinter"
 
+# Gemfile
+
+gem 'blueprinter'
+
+bundle i
+
+(if you haven't already installed at beginning)
+
+rails g blueprinter:blueprint user
+
+# app/blueprints/user_blueprint.rb
+
+class UserBlueprint < Blueprinter::Base
+    identifier :id
+
+    view :normal do
+        fields :username
+    end
+
+    view :profile do
+        association :location, blueprint: LocationBlueprint
+        association :posts, blueprint: PostBlueprint, view: :profile do |user, options|
+            user.posts.order(create_at: :desc).limit(5)
+        end
+
+        association :events, blueprint: EventBlueprint, view: :profile do |user, options|
+            user.events.order(start_date_time: :desc).limit(5)
+        end
+    end
+end
 
 
+# app/controllers/users_controller.rb
 
+def show
+  render json: UserBlueprint.render(@user, view: :normal), status: 200
+end
 
+# app/blueprints/profile_blueprint.rb
 
+rails g blueprinter:blueprint profile
 
+class ProfileBlueprint < Blueprinter::Base
+    identifier :id
+    fields :bio
 
+    view :normal do
+        association :user, blueprint: UserBlueprint, view: :profile
+    end
+end
+
+# create 3 more separate blueprints
+
+rails g blueprinter:blueprint location
+
+# app/blueprints/profile_blueprint.rb
+
+class LocationBlueprint < Blueprinter::Base
+    identifier :id
+    fields :zip_code, :city, :state, :country, :address
+end
+
+# app/blueprints/post_blueprint.rb
+rails g blueprinter:blueprint post
+
+class PostBlueprint < Blueprinter::Base
+    identifier :id
+
+    view :profile do
+        fields :content, :created_at
+    end
+end
+
+# app/blueprints/event_blueprint.rb
+rails g blueprinter:blueprint event
+
+class EventBlueprint < Blueprinter::Base
+    identifier :id
+
+    view :profile do
+        fields :content, :start_date_time, :end_date_time, :guests, :title
+    end
+end
+
+# config/routes.rb
+
+Rails.application.routes.draw do
+  get 'sessions/create'
+  scope '/' do
+    post 'login', to: 'sessions#create'
+  end
+
+  resources :events
+  scope :profiles do
+    get ':username', to: 'profiles#show'
+  end
+  resources :posts
+  resources :users do
+    get 'posts', to: 'users#posts_index'
+    end
+  end
+
+# app/controllers/profiles_controller.rb
+rails g controller profiles show
+
+class ProfilesController < ApplicationController
+  def show
+    user = User.find_by(username: params[:username])
+    profile = user.profile
+    render json: ProfileBlueprint.render(profile, view: :normal, status: :ok)
+  end
+end
+
+# app/models/user.rb
+
+after_create :create_profile
+
+# Postman
+
+rails c 
+
+exit
+
+rails s
+
+create user
+
+POST localhost:3000/users
+
+{
+    "username": "amber_gray123",
+    "email": "amber_gray123@gmail.com",
+    "first_name": "Amber",
+    "last_name": "Gray",
+    "password": "password7",
+    "password_confirmation": "password7"
+}
+
+click Send button
+
+{
+    "id": 7,
+    "username": "amber_gray123",
+    "email": "amber_gray123@gmail.com",
+    "first_name": "Amber",
+    "last_name": "Gray",
+    "created_at": "2024-03-10T20:49:10.095Z",
+    "updated_at": "2024-03-10T20:49:10.095Z",
+    "password_digest": "$2a$12$mv56YcANIIy5LmuVHKKHV.jIIm0Qh2JjyhI3VCo9916GSVGxYrSD2"
+}
+
+add folder called profiles
+
+Add request called get profile
+
+GET localhost:3000/profiles/test
+
+# controllers/profiles_controller.rb
+
+before_action :authenticate_request
+
+# Postman
+
+Authorization, Bearer Token, put in token, click Send button
+
+concludes video "Serializing Data with Blueprinter"
 
 
 
