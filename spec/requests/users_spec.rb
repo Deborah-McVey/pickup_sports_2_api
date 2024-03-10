@@ -3,8 +3,8 @@ require 'rails_helper'
 RSpec.describe "Users", type: :request do
   describe "GET /users" do
 
-    let {:user} {create{:user}}
-    let(:token) { auth_token_for_user(:user) }
+    let(:user) { create(:user) }
+    let(:token) { auth_token_for_user(user) }
 
     before do
       # creating the user
@@ -26,8 +26,8 @@ RSpec.describe "Users", type: :request do
 
   # show
   describe "GET /user/:id" do
-    let {:user} {create{:user}}
-    let(:token) { auth_token_for_user(:user) }
+    let(:user) { create(:user) }
+    let(:token) { auth_token_for_user(user) }
 
     before do
       get "/users/#{user.id}", 
@@ -41,13 +41,14 @@ RSpec.describe "Users", type: :request do
 
   # response with the correct user
   it "returns a response with the correct user" do
-  expect(response.body).to eq{user.to_json}
+  expect(response.body).to eq(user.to_json)
   end
 end
 
   # create
   describe "POST /users" do
-    let {:user} {create{:user}}
+    let(:user) { create(:user) }
+    # maybe not 
     let(:token) { auth_token_for_user(user) }
     # valid params
     context "with valid params" do
@@ -55,6 +56,7 @@ end
       before do
         user_attributes = attributes_for(:user, first_name: nil)
         user "/users", params: user_attributes, 
+        # maybe not
         headers: { Authorization: "Bearer #{token}" }
       end
 
@@ -86,8 +88,8 @@ end
   # update
 describe "PUT /users/:id" do
   context "with valid params" do
-    let {:user} {create{:user}}
-    let(:token) { auth_token_for_user(:user) }
+    let(:user) { create(:user) }
+    let(:token) { auth_token_for_user(user) }
 
     before do
       user_attributes = (first_name: "John")
@@ -107,11 +109,13 @@ describe "PUT /users/:id" do
   end
 
   context "with invalid params" do
-    let{:user} {create{:user}}
+    let(:user) { create(:user) }
+    let(:token) { auth_token_for_user(user) }
 
   before do
-    post_attributes = {first_name: nil}
-    put "/users/#{user.id}", params: post_attributes
+    user_attributes = (first_name: nil)
+    put "/users/#{user.id}", params: user_attributes, 
+    headers: { Authorization: "Bearer #{token}" }
   end
 
   it "returns a response with errors" do
@@ -122,8 +126,8 @@ end
 
   # destroy
 describe "DELETE /user/:id" do
-  let {:user} {create{:user}}
-  let(:token) { auth_token_for_user(:user) }
+  let(:user) { create(:user) }
+  let(:token) { auth_token_for_user(user) }
 
   before do
     delete "/users/#{user.id}", 

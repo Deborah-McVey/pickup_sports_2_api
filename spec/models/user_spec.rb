@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe User, type: :model do
   
   context 'Validations test' do
+    
     it 'is not valid without a first name' do
       user = build(:user, first_name: nil)
       expect(user).not_to be_valid
@@ -14,7 +15,7 @@ RSpec.describe User, type: :model do
     expect(user).not_to be_valid
   end
 
-  it 'is not valid without a user name' do
+  it 'is not valid without a username' do
     user = build(:user, username: nil)
     expect(user).not_to be_valid
   end
@@ -46,9 +47,10 @@ end
 end
 
 context 'Uniqueness tests' do
+
   it 'is not valid without a unique user name' do
     user1 = create(:user)
-    user2 = build(:user, username: user1.user_name)
+    user2 = build(:user, username: user1.username)
 
     expect(user2).not_to be_valid
     expect(user2.errors[:username]).to include("has already been taken")
@@ -64,7 +66,7 @@ context 'Uniqueness tests' do
   end
 
 context 'destroy user and everything dependent on it' do
-  let (:user) {create(:user)}
+  let (:user) { create(:user) }
   let (:user) {user.id}
 
   before do

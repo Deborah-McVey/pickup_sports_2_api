@@ -3,8 +3,8 @@ require 'rails_helper'
 RSpec.describe "Posts", type: :request do
   describe "GET /posts" do
 
-    let(:post) {create(:post)}
-    let {:user} {create{:user}}
+    let(:post) { create(:post) }
+    let(:user) { create(:user) }
     let(:token) { auth_token_for_user(:user) }
 
     before do
@@ -27,8 +27,8 @@ RSpec.describe "Posts", type: :request do
 
   # show
   describe "GET /post/:id" do
-    let(:post) {create{:post}}
-    let {:user} {create{:user}}
+    let(:post) { create(:post) }
+    let(:user} { create(:user) }
     let(:token) { auth_token_for_user(:user) }
 
     before do
@@ -43,13 +43,13 @@ RSpec.describe "Posts", type: :request do
 
   # response with the correct post
   it "returns a response with the correct post" do
-  expect(response.body).to eq{post.to_json}
+  expect(response.body).to eq(post.to_json)
   end
 end
 
   # create
   describe "POST /posts" do
-    let {:user} {create{:user}}
+    let(:user) { create(:user) }
     let(:token) { auth_token_for_user(user) }
     # valid params
     context "with valid params" do
@@ -72,9 +72,9 @@ end
 
     # invalid params
     context "with invalid params" do
-
+      
       before do
-        post_attributes = attributes_for{:post, content: nil}
+        post_attributes = attributes_for{:post, user_id: nil}
         post "/posts", params: post_attributes, 
         headers: { Authorization: "Bearer #{token}" }
       end
@@ -88,8 +88,8 @@ end
   # update
 describe "PUT /posts/:id" do
   context "with valid params" do
-    let{:post} {create{:post}}
-    let {:user} {create{:user}}
+    let(:post) { create(:post) }
+    let(:user) { create(:user) }
     let(:token) { auth_token_for_user(:user) }
 
     before do
@@ -110,7 +110,7 @@ describe "PUT /posts/:id" do
   end
 
   context "with invalid params" do
-    let{:post} {create{:post}}
+    let(:post) { create(:post) }
 
   before do
     post_attributes = {content: nil}
@@ -125,8 +125,8 @@ end
 
   # destroy
 describe "DELETE /post/:id" do
-  let {:post} {create{:post}}
-  let {:user} {create{:user}}
+  let(:post) { create(:post) }
+  let(:user) { create(:user) }
   let(:token) { auth_token_for_user(:user) }
 
   before do

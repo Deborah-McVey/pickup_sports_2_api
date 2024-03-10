@@ -1,5 +1,7 @@
 # README
 
+# disclaimer - These are all fake names and emails made up for testing. Please don't click on any links.
+
 # creating the api project
 
 Ubuntu
@@ -1810,6 +1812,84 @@ click Send button with correct password
 conclude video "Login Action and JWTs"
 
 # begin video "Authenticating User Requests"
+
+create new file in spec
+
+# spec/support/auth_helpers.rb
+
+module AuthHelpers
+    def auth_token_for_user(user)
+        JWT.encode({user_id: user.id}, Rails.application.secret_key_base)
+    end
+end
+
+# spec/rails_helper.rb
+
+require 'support/auth_helpers'
+
+config.include AuthHelpers, type: :request
+
+# spec/requests/users_spec.rb
+
+this is where we are going to add...
+
+let(:token) { auth_token_for_user(user) }
+
+headers: { Authorization: "Bearer #{token}" }
+
+...these, in different places for each type of request (not for create)
+
+# spec/requests/posts_spec.rb
+
+every type needs Bearer token
+
+also need the user create
+
+# app/controllers/application_controller.rb
+
+class ApplicationController < ActionController::API
+    def authenticate_request
+      header = request.headers['Authorization']
+      header = header.split(' ').last if header
+      begin
+        decoded = JWT.decode(header, Rails.application.secret_key_base).first
+        @current_user = User.find(decoded['user_id'])
+      rescue JWT::ExpiredSignature
+        render json: { error: 'Token has expired' }, status: :unauthorized
+      rescue JWT::DecodeError
+        render json: { errors: 'Unauthorized' }, status: :unauthorized
+      end
+    end
+  end
+
+# app/controllers/users_controller.rb
+
+before_action :authenticate_request, only: [:index, :show, :update, :destroy]
+
+# app/controllers/posts_controller.rb
+
+before_action :authenticate_request
+
+# Postman
+
+go to get user
+
+Authorization, Type: Bearer, paste token
+
+click Send button
+
+get all of the users
+
+# app/controllers/events_controller.rb
+
+before_action :authenticate_request
+
+# spec/requests/events_spec.rb
+
+concludes video "Authenticating User Requests"
+
+# bein video "Identifying Current User through Requests"
+
 
 
 
