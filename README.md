@@ -1694,9 +1694,128 @@ click Send button
     "password_digest": "$2a$12$2stmhH4b2mt7wvWVUd3T3uXMQCWciKdD64W.HZP4RWRgcrUY7L1HC"
 }
 
+# browser
+
+localhost:3000/users
+
+[{"id":1,"username":"john_doe456","email":"johndoe123@gmail.com","first_name":"John","last_name":"Doe","created_at":"2024-03-03T23:38:33.666Z","updated_at":"2024-03-09T16:27:05.300Z","password_digest":null},{"id":2,"username":"amy_wine","email":"amy_wine@gmail.com","first_name":"Amy","last_name":"Wine","created_at":"2024-03-04T00:32:13.561Z","updated_at":"2024-03-04T00:32:13.561Z","password_digest":null},{"id":3,"username":"jim123","email":"jim123@gmail.com","first_name":"Jim","last_name":"Owens","created_at":"2024-03-04T00:58:51.343Z","updated_at":"2024-03-04T00:58:51.343Z","password_digest":null},{"id":5,"username":"hammybones123","email":"hammybones123@gmail.com","first_name":"Hammy","last_name":"Bones","created_at":"2024-03-10T14:52:07.576Z","updated_at":"2024-03-10T14:52:07.576Z","password_digest":"$2a$12$q5vmqmToBNJyq4wTa36KVOJXp4Vo2r68C3FWNk8sk/8DajNM7qoQq"},{"id":6,"username":"jackie_allen123","email":"jackie_allen123@gmail.com","first_name":"Jackie","last_name":"Allen","created_at":"2024-03-10T15:03:22.143Z","updated_at":"2024-03-10T15:03:22.143Z","password_digest":"$2a$12$2stmhH4b2mt7wvWVUd3T3uXMQCWciKdD64W.HZP4RWRgcrUY7L1HC"}]
+
 conclude video "Setting up BCrypt to Hash User Passwords"
 
 # begin video "Login Action and JWTs"
+
+adding sessions spec and also controller
+
+rails g rspec:request Sessions
+
+# spec/requests/sessions_spec.rb
+
+require 'rails_helper'
+
+RSpec.describe "Sessions", type: :request do
+  describe "POST /login" do
+
+    let(:user) { create(:user) }
+   
+    it 'authenticates the user and returns a success response' do
+
+      post '/login', params { username: user.name, password: user.password }
+
+      expect(response).to have_http_status(:success)
+      expect(JSON.parse(response.body)).to include('token')
+    end
+
+    it 'does not authenticate the user and returns an error' do
+      post '/login', params: { username: user.username, password: 'wrong password' }
+      expect(response).to have_http_status(:unauthorized)
+    end
+
+  end
+end
+
+# config/routes.rb
+
+Rails.application.routes.draw do
+  scope '/' do
+    post 'login', to: 'sessions#create'
+  end
+
+  resources :events
+  resources :posts, only: [:create, :update, :destroy]
+  resources :users do
+    get 'posts', to: 'users#posts_index'
+    end
+  end
+
+# make sessions controller with create action
+
+rails g controller sessions create
+
+type n for No, don't override spec file
+
+# app/controllers/sessions_controller.rb
+
+class SessionsController < ApplicationController
+  def create
+    user = User.find_by(username: params[:username])
+
+    if user&.authenticate(params[:password])
+      token = jwt_encode(user_id: user.id)
+      render json: { token: token }, status: :ok
+    else
+      render json: {error: "unauthorized"}, status: :unauthorized
+    end
+  end
+
+  private 
+  def jwt_encode(payload, exp = 24.hours.from_now)
+    payload[:exp] = exp.to_i
+    JWT.encode(payload, Rails.application.secret_key_base)
+  end
+end
+
+# Gemfile
+
+add jwt if you haven't already
+
+bundle i
+
+rails s
+
+# Postman
+
+make new folder called sessions
+
+Add a request to sessions folder called login
+
+POST localhost:3000/login
+
+Body, raw, JSON
+
+try to login a user you already made with a password
+
+{
+  "username": "jackie_allen123",
+  "password": "password6"
+}
+
+if you had put in the wrong password, you recieve an error message "unauthorized"
+
+click Send button with correct password
+
+{
+    "token": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo2LCJleHAiOjE3MTAxNzM0MDV9.eFREEe4m2pgmTEmIkqxB7bgabrkKrlsV2Y5DpvQ6FX0"
+}
+
+conclude video "Login Action and JWTs"
+
+# begin video "Authenticating User Requests"
+
+
+
+
+
+
 
 
 
