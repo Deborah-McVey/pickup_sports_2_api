@@ -113,7 +113,7 @@ describe "PUT /posts/:id" do
     let{:post} {create{:post}}
 
   before do
-    post_attributes = {:content: nil}
+    post_attributes = {content: nil}
     put "/posts/#{post.id}", params: post_attributes
   end
 

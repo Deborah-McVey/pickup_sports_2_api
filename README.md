@@ -1457,6 +1457,26 @@ concludes video "Testing Requests using RSpec - Posts Controller"
 
 # begin video "Tests for Users Controller - Another example of testing Requests"
 
+if you didn't have rspec installed at beginning, then run rails g rspec:request Users
+
+use content from spec/requests/posts_spec.rb to fill in spec/requests/users_spec.rb
+
+copy/paste
+
+# spec/requests/users_spec.rb
+
+change all occurrances of user to post, and variations
+
+# controllers/users_controllers.rb
+
+remove .require(:user)
+
+conclude video "Tests for User Controller - Another example of testing Requests"
+
+# begin video "Testing our events model using Rspec, Factory bot and Faker"
+
+
+
 
 
 
