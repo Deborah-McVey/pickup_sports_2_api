@@ -1535,7 +1535,42 @@ concludes video "Testing our events model using RSpec, Factory bot and Faker"
 
 # begin video "Testing the Events Controller!"
 
+need to make spec/requests/events_spec.rb
 
+rails g rspec:request Events
+
+# spec/requests/events_spec.rb
+
+# spec/models/event_spec.rb
+
+context 'destroy related associations' do
+    it 'destroys event_participants' do
+      event = create(:event)
+      event_id = event.id
+      event.destroy
+      event_participants = EventParticipant.where(event_id: event.id)
+      expect(event_partipants).to be_empty
+     end
+
+need to create events controller
+
+rails g controller events
+
+# config/routes.rb
+
+Rails.application.routes.draw do
+  resources :events
+  resources :posts, only: [:create, :update, :destroy]
+  resources :users do
+    get 'posts', to: 'users#posts_index'
+    end
+  end
+
+# controller/events_controller.rb
+
+concludes video "Testing the Events Controller!"
+
+# begin video "Setting up BCrypt to Hash User Passwords"
 
 
 

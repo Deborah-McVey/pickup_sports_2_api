@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  resources :events
+  resources :posts, only: [:create, :update, :destroy]
+  resources :users do
+    get 'posts', to: 'users#posts_index'
+    end
+  end
   # localhost:3000/users
   #get '/users', to: 'users#index'
 
@@ -18,10 +24,5 @@ Rails.application.routes.draw do
 
   # localhost:3000/users/1/posts
   # get '/users/:id/posts', to: 'users#posts_index'
-
-  resources :users do
-    get 'posts', to: 'users#posts_index'
-    end
-
-  resources :posts, only: [:create, :update, :destroy]
-  end
+  
+  
