@@ -1475,6 +1475,67 @@ conclude video "Tests for User Controller - Another example of testing Requests"
 
 # begin video "Testing our events model using Rspec, Factory bot and Faker"
 
+events factory (already put in text)
+
+# spec/models/event_spec.rb
+
+we're going to add a migration file to add title to events table
+
+rails g migration AddTitleToEvents
+
+add_column :events, :title, :string
+
+rails db:migrate
+
+# spec/factories/events.rb
+
+title { Faker::Lorem.sentence }
+
+# app/models/event.rb
+
+validates :title, presence: true
+
+custom validator
+
+validates :start_date_time_cannot_be_in_past, :end_date_time_cannot_be_before_start_date_time
+
+def start_date_time_cannot_be_in_past
+  if start_date_time.present? && start_date_time < DateTime.now
+  errors.add(:start_date_time, "cannot be in the past")
+end
+
+def end_date_time_cannot_be_before_start_date_time
+  if end_date_time < start_date_time
+  errors.add(:end_date_time, "cannot be before start date time")
+end
+
+rails c
+
+exit
+
+# spec/factories/comments.rb
+
+user 
+content { Faker::Lorem.paragraph }
+
+# spec/factories/sports.rb 
+
+FactoryBot.define do
+  factory :sport do
+    name { Faker::Lorem.word }
+  end
+end
+
+# spec/models/event_spec.rb
+# spec/models/sport_spec.rb
+
+removed pending line in each
+
+concludes video "Testing our events model using RSpec, Factory bot and Faker"
+
+# begin video "Testing the Events Controller!"
+
+
 
 
 
