@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+    has_secure_password
+
     # validations
     validates :username, presence: true, uniqueness: true, length: { minimum: 3, maximum: 30 }
     # custom validator (part 1)

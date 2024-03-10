@@ -1572,6 +1572,136 @@ concludes video "Testing the Events Controller!"
 
 # begin video "Setting up BCrypt to Hash User Passwords"
 
+# spec/models/user_spec.rb
+
+password
+
+  it 'is invalid when password is nil' do
+    user = build(:user, password: nil)
+  end
+
+password confirmation
+
+  it 'is invalid when password confirmation is nil' do
+    user = build(:user, password_confirmation: nil)
+  end
+
+hashes the password
+
+  it 'hashes the password' do
+    user = create(:user)
+    expect(user.password_digest).not_to eq 'password'
+  end
+  
+# spec/factories/usersc.rb
+
+FactoryBot.define do
+  factory :user do
+    username { Faker::Internet.username(specifier: 3..20, separators: %w(_)) }
+    email { Faker::Internet.email }
+    first_name { Faker::Internet.first_name }
+    last_name { Faker::Internet.last_name }
+    password { 'password' }
+    password_confirmation { 'password' }
+  end
+end
+
+# Gemfile
+
+add bcrypt if you haven't already
+
+bundle i
+
+# app/models/user.rb
+
+has_secure_password
+
+rails c or reload!
+
+# we're going to add a migration for password_digest
+
+rails g migration AddPasswordDigestToUsers password_digest:string
+
+makes a new file in db/migrate 
+
+class AddPasswordDigestToUsers < ActiveRecord::Migration[7.1]
+  def change
+    add_column :users, :password_digest, :string
+  end
+end
+
+rails db:migrate
+
+# controllers/users_controller.rb
+
+  def user_params
+    params.permit(:username, :email, :first_name, :last_name, :password, :password_confirmation)
+  end
+
+rails s  
+
+# Postman
+
+create user 
+
+POST localhost:3000/users
+
+Body, raw, JSON
+
+{
+    "username": "hammybones123",
+    "email": "hammybones123@gmail.com",
+    "first_name": "Hammy",
+    "last_name": "Bones",
+    "password": "password"
+}
+
+click Send button
+
+{
+    "id": 5,
+    "username": "hammybones123",
+    "email": "hammybones123@gmail.com",
+    "first_name": "Hammy",
+    "last_name": "Bones",
+    "created_at": "2024-03-10T14:52:07.576Z",
+    "updated_at": "2024-03-10T14:52:07.576Z",
+    "password_digest": "$2a$12$q5vmqmToBNJyq4wTa36KVOJXp4Vo2r68C3FWNk8sk/8DajNM7qoQq"
+}
+
+You can create another user and include password_confirmation if you want.
+If password and password_confirmation don't match, it will give an error message.
+
+{
+    "username": "jackie_allen123",
+    "email": "jackie_allen123@gmail.com",
+    "first_name": "Jackie",
+    "last_name": "Allen",
+    "password": "password6",
+    "password_confirmation": "password6"
+}
+
+click Send button
+
+{
+    "id": 6,
+    "username": "jackie_allen123",
+    "email": "jackie_allen123@gmail.com",
+    "first_name": "Jackie",
+    "last_name": "Allen",
+    "created_at": "2024-03-10T15:03:22.143Z",
+    "updated_at": "2024-03-10T15:03:22.143Z",
+    "password_digest": "$2a$12$2stmhH4b2mt7wvWVUd3T3uXMQCWciKdD64W.HZP4RWRgcrUY7L1HC"
+}
+
+conclude video "Setting up BCrypt to Hash User Passwords"
+
+# begin video "Login Action and JWTs"
+
+
+
+ 
+
 
 
 

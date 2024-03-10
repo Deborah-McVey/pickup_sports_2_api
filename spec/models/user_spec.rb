@@ -24,6 +24,8 @@ RSpec.describe User, type: :model do
     expect(user).not_to be_valid
 end
 
+# setting up BCrypt to Hash User Passwords
+
   # password
   it 'is invalid when password is nil' do
     user = build(:user, password: nil)
@@ -36,7 +38,9 @@ end
 
   # hashes the password
   it 'hashes the password' do
-    user = build(:user, password_digest).not_to eq 'password'
+    user = create(:user)
+    expect(user.password_digest).not_to eq 'password'
+    #user = build(:user, password_digest).not_to eq 'password'
   end
   
 end
