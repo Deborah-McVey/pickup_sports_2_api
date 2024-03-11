@@ -2120,6 +2120,26 @@ concludes video "Rails Seeds File - Populate users and posts"
 
 # begin video "Fetching Events with Pagination"
 
+# Gemfile
+
+install gem 'kaminari' if you haven't already
+
+# events_controller.rb
+
+before_action :authenticate_request, except: [:index]
+    
+    def index
+        events = Event.order(created_at: :desc).page(params[:page]).per(12)
+
+        render json: (
+            events: EventBlueprint.render_as_hash(events, view: :short), total_pages: events.total_pages, 
+            current_page: events.current_page
+        )
+    end
+
+# event_blueprint.rb
+
+
 
 
 
