@@ -2077,6 +2077,37 @@ Authorization, Bearer Token, put in token, click Send button
 
 concludes video "Serializing Data with Blueprinter"
 
+# video "Angular to Rails API - Fetching Posts from Back End"
+
+wants you to install gem "rack-cors" but I already did.
+
+# config/initializers.cors.rb
+
+Rails.application.config.middleware.insert_before 0, Rack::Cors do
+    allow do
+     # TODO
+      origins "*"
+ 
+      resource "*",
+        headers: :any,
+        methods: [:get, :post, :put, :patch, :delete, :options, :head]
+    end
+  end
+
+# controllers/posts_controller.rb
+
+comment out before_action :authenticate_request for now
+
+# if you want to check your database
+
+rails c
+
+Post.count
+
+concludes video "Angular to Rails API - Fetching Posts from Back End"
+
+
+
 
 
 
