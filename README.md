@@ -2094,9 +2094,9 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
     end
   end
 
-# controllers/posts_controller.rb
+# all the controllers, if they have it
 
-comment out before_action :authenticate_request for now
+comment out before_action :authenticate_request (for now)
 
 # if you want to check your database
 
@@ -2104,7 +2104,29 @@ rails c
 
 Post.count
 
-concludes video "Angular to Rails API - Fetching Posts from Back End"
+# video "Rails Seeds File - Populate users and posts"
+
+# db/seeds.rb
+
+rails db:seed
+
+rails c
+
+User.count
+
+Post.count
+
+concludes video "Rails Seeds File - Populate users and posts"
+
+# begin video "Fetching Events with Pagination"
+
+
+
+
+
+
+
+
 
 
 
