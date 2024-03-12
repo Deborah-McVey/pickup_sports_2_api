@@ -2141,8 +2141,15 @@ before_action :authenticate_request, except: [:index]
 
 concludes video "Fetching Events with Pagination" 
 
+# begin video "Building Login Functionality"
 
+# config/routes.rb
 
+remove get 'sessions/create'
+
+concludes video "Building Login Functionality"
+
+# begin video "Adding a Sidebar for additional routes"
 
 
 
