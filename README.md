@@ -2151,6 +2151,9 @@ concludes video "Building Login Functionality"
 
 # begin video "Adding a Sidebar for additional routes"
 
+concludes video "Adding a Sidebar for additional routes"
+
+# begin video "Adding Logout to our Navbar"
 
 
 
