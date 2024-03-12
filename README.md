@@ -2139,7 +2139,7 @@ before_action :authenticate_request, except: [:index]
 
 # event_blueprint.rb
 
-
+concludes video "Fetching Events with Pagination" 
 
 
 

@@ -15,8 +15,8 @@
     rand(1..10).times do
         user.created_events.create(
             title: Faker::Lorem.sentence, 
-            end_date_time: Faker::Time.forward[days: 25, period: :morning],
-            start_date_time: Faker::Time.forward[days: 25, period: :morning],
+            end_date_time: Faker::Time.forward(days: 25, period: :morning),
+            start_date_time: Faker::Time.forward(days: 25, period: :morning),
             guests: rand(1..10),
             content: Faker::Lorem.paragraph
         )
