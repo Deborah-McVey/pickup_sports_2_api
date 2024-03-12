@@ -1499,7 +1499,7 @@ validates :title, presence: true
 
 custom validator
 
-validates :start_date_time_cannot_be_in_past, :end_date_time_cannot_be_before_start_date_time
+validate :start_date_time_cannot_be_in_past, :end_date_time_cannot_be_before_start_date_time
 
 def start_date_time_cannot_be_in_past
   if start_date_time.present? && start_date_time < DateTime.now
