@@ -1,6 +1,6 @@
 class EventsController < ApplicationController
     before_action :set_event, only: [:show, :update, :destroy]
-    #before_action :authenticate_request, except: [:index]
+    before_action :authenticate_request, except: [:index]
     
     def index
         events = Event.order(created_at: :desc).page(params[:page]).per(12)

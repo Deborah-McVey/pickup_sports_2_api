@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'web/bootstrap'
   #get 'sessions/create'
   scope '/' do
     post 'login', to: 'sessions#create'

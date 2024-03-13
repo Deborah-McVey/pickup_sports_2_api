@@ -2155,6 +2155,39 @@ concludes video "Adding a Sidebar for additional routes"
 
 # begin video "Adding Logout to our Navbar"
 
+changes to navigation components on front end
+
+concludes video "Adding Logout to our Navbar"
+
+# begin video "Adding Auth Guards to Protect Routes"
+
+rails g controller web bootstrap
+
+# controllers/web_controller.rb
+
+# config/routes.rb
+
+get 'web/bootstrap'
+
+# blueprints/user_blueprint.rb
+
+view :me do
+  fields :first_name, :last_name, :username, :email
+end
+
+rails c
+
+go to pickup_sports_2_client in app.config.ts
+
+concludes video "Gather current user info on App Initialization"
+
+# begin video "Interceptor for attaching Tokens to requests"
+
+
+
+
+
+
 
 
 
