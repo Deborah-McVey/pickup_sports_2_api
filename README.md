@@ -2181,11 +2181,6 @@ go to pickup_sports_2_client in app.config.ts
 
 concludes video "Gather current user info on App Initialization"
 
-# begin video "Interceptor for attaching Tokens to requests"
-
-
-
-
 
 
 
