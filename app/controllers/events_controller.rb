@@ -10,7 +10,8 @@ class EventsController < ApplicationController
             current_page: events.current_page
         )
     end
-
+    
+    # localhost:3000/events/:id
     def show
         render json: @event, status: :ok
     end

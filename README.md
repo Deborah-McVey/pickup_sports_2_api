@@ -2181,9 +2181,45 @@ go to pickup_sports_2_client in app.config.ts
 
 concludes video "Gather current user info on App Initialization"
 
+* will return to Render and Vercel videos *
 
+# begin video "Creating Event Details View"
 
+event_controller.rb
 
+made comment to use show action
+
+# event_blueprint.rb
+
+add :content to long view
+
+create some sports
+
+rails c
+
+Sport.first
+
+#<Sport:0x00007fd24d78c608
+ id: 1,
+ name: "Basketball",
+ created_at: Sat, 09 Mar 2024 01:31:17.138253000 UTC +00:00,
+ updated_at: Sat, 09 Mar 2024 01:31:17.138253000 UTC +00:00>
+
+Sport.create(name: "Bowling") 
+
+TRANSACTION (227.0ms)  begin transaction
+  Sport Create (552.4ms)  INSERT INTO "sports" ("name", "created_at", "updated_at") VALUES (?, ?, ?) RETURNING "id"  [["name", "Bowling"], ["created_at", "2024-03-15 23:52:41.994651"], ["updated_at", "2024-03-15 23:52:41.994651"]]
+  TRANSACTION (15.2ms)  commit transaction
+ => 
+#<Sport:0x00007fd247e53208
+ id: 2,
+ name: "Bowling",
+ created_at: Fri, 15 Mar 2024 23:52:41.994651000 UTC +00:00,
+ updated_at: Fri, 15 Mar 2024 23:52:41.994651000 UTC +00:00> 
+
+event.sports << Sport.first 
+
+concludes video "Create Event Details View"
 
 
 
